@@ -180,7 +180,7 @@ var empty = new Player("empty", "#444444");
 
 
 var p1 = new Player("John","#8A2BE3");
-var p3 = new Player("Robbie","1919ff");
+var p3 = new Player("Robbie","#1919FF");
 var p4 = new Player("Bob", "#D35400");
 var p2 = new Player("Rob", "#27AE60");
 
