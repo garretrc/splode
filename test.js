@@ -98,10 +98,15 @@ class Graph
 		this.maxY = -10000;
 		this.minX = 10000;
 		this.minY = 10000;
+		this.width = 0;
+		this.height = 0;
 
 		// The following is for the sploding functionality
 		this.toProcess = [];
 		this.overflow = 0;
+
+		// The following is for the undo feature. We store the previous graph.
+		this.prev = null;
     }
 
     addNode(node)
@@ -204,6 +209,55 @@ class Graph
     			return true;
     	}
     	return false;
+    }
+
+    // Duplicates the graph to save it for the undo feature.
+    duplicate()
+    {
+    	if(this.toProcess.length == 0) {
+    		var newGraph = new Graph(players);
+
+    		// Make copy of nodes
+    		var newNode;
+    		for(let node of this.nodes) {
+    			newNode = new Node(node.x, node.y, node.r);
+    			newNode.player = node.player;
+    			newNode.count = node.count;
+    			newGraph.addNode(newNode);
+    		}
+
+    		// Make copy of edges
+    		for(var i = 0; i < this.nodes.length; i++) {
+    			for(var j = 0; j < this.nodes.length; j++) {
+    				if(i != j && this.nodes[i].neighbors.includes(this.nodes[j])) {
+    					newGraph.nodes[i].addNeighbor(newGraph.nodes[j]);
+    				}
+    			}
+    		}
+
+    		// Copy the player information
+			newGraph.players = this.players;
+			newGraph.currIndex = this.currIndex;
+			newGraph.currPlayer = this.currPlayer;
+			newGraph.playerCounts = new Map();
+			for(var i = 0; i < players.length; i++) {
+				newGraph.playerCounts.set(newGraph.players[i], this.playerCounts.get(this.players[i]));
+			}
+
+			// The following keeps track of the graph's bounds
+			newGraph.maxX = this.maxX;
+			newGraph.maxY = this.maxY;
+			newGraph.minX = this.minX;
+			newGraph.minY = this.minY;
+			newGraph.width = this.width;
+			newGraph.height = this.height;
+
+			// The following is for the undo feature. We store the previous graph.
+			newGraph.prev = this;
+
+			// Now we set the current graph to this new graph.
+			return newGraph;
+    	}
     }
 }
 
@@ -442,6 +496,9 @@ var edgeColor = "#000000";
 // milliseconds between splodes; will make variable soon.
 var splodeConstant = 500;
 
+// Proportion for bottom margin
+var bottomMargin = .9;
+
 
 /*
 
@@ -459,7 +516,7 @@ Set the Graph
 
 */
 
-var testGraph = new DiamondGraph(5, players);
+var testGraph = new RectGraph(5, 5, players);
 
 
 
@@ -597,11 +654,16 @@ function clickHandler(evt) {
 	console.log("Click!");
 	// Get coordinates in graph-space
 	var coord = getMousePos(canvas, evt);
-	var mousePos = scaleBack(canvas.width, canvas.height, testGraph, coord.x, coord.y);
+	if(coord.y >= canvas.height*bottomMargin && testGraph.prev != null) {
+		testGraph = testGraph.prev;
+	}
+	var mousePos = scaleBack(canvas.width, canvas.height*bottomMargin, testGraph, coord.x, coord.y);
 	for (let node of testGraph.nodes) {
 		// For each node, see if the click was in it, and if the colors agree,
 		// and if the time is okay to click.
 		if(!testGraph.stillProcessing() && node.contains(mousePos.x, mousePos.y) && (node.player == testGraph.currPlayer || node.player == empty)) {
+			testGraph = testGraph.duplicate();
+			node = testGraph.nodes[testGraph.prev.nodes.indexOf(node)];
 			console.log(node.count + " " + node.neighbors.length + " " + node.neighbors.length);
 			node.count = node.count + 1;
 			if(node.player != testGraph.currPlayer) {
@@ -629,9 +691,9 @@ by waiting splodeTime if a splosion occured.
 */
 function loop(time, width, height) {
 	// Print Who's playing
-	ctx.font = 20 + "px Arial";
+	ctx.font = 30 + "px Arial";
 	ctx.fillStyle = testGraph.currPlayer.color;
-	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn") : "Game over"), 10, textSize + 10);
+	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn") : "Game over"), 10, textSize + bottomMargin*height);
 
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
@@ -644,5 +706,5 @@ function loop(time, width, height) {
 	}
 
 	// Draw graphs
-	drawGraph(testGraph, width, height);
+	drawGraph(testGraph, width, height*bottomMargin);
 }
