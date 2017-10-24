@@ -289,6 +289,19 @@ class CycleGraph extends Graph
 
 /*
 
+Path Graph
+
+*/
+class PathGraph extends RectGraph
+{
+	constructor(width, players)
+	{
+		super(width, 1, players);
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -355,7 +368,7 @@ Set the Graph
 
 */
 
-var testGraph = new CycleGraph(10, players);
+var testGraph = new PathGraph(10, players);
 
 
 
