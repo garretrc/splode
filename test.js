@@ -365,6 +365,34 @@ class CompleteGraph extends Graph
 
 /*
 
+Diamond Graph
+
+*/
+class DiamondGraph extends Graph
+{
+	constructor(size, players)
+	{
+    	super(players);
+
+    	// Make Nodes, with their coordinates
+        for(var i = 0; i < size; i++) {
+            for(var j = 0; j < size; j++) {
+            	if((i+j)%2 == 0) {
+                	this.addNode(new Node(i*100, j*100, 50));
+                }
+            }
+        }
+
+        // Make edges
+        this.geometric(100*Math.sqrt(2)+10);
+
+        // Very Important!!! Compute Boundaries
+        this.determineBoundaries();
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -431,7 +459,7 @@ Set the Graph
 
 */
 
-var testGraph = new WheelGraph(10, players);
+var testGraph = new DiamondGraph(5, players);
 
 
 
