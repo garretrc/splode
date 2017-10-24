@@ -307,7 +307,8 @@ Wheel is a cycle and a star
 */
 class WheelGraph extends Graph
 {
-	constructor(size, players) {
+	constructor(size, players)
+	{
 		super(players);
 
 		// Make Outer Nodes
@@ -326,6 +327,36 @@ class WheelGraph extends Graph
 		for(var i = 0; i < size; i++) {
 			this.nodes[size].addNeighbor(this.nodes[i]);
 			this.nodes[i].addNeighbor(this.nodes[size]);
+		}
+
+		this.determineBoundaries();
+	}
+}
+
+/*
+
+Complete Graph
+
+*/
+class CompleteGraph extends Graph
+{
+	constructor(size, players)
+	{
+		super(players);
+
+		// Make Nodes
+		var dist = Math.sqrt(Math.pow(100*Math.cos(2*Math.PI/size) - 100, 2) + Math.pow(100*Math.sin(2*Math.PI/size), 2));
+		for(var i = 0; i < size; i++) {
+			this.addNode(new Node(100*Math.cos(2*Math.PI*i/size), 100*Math.sin(2*Math.PI*i/size), .35*dist))
+		}
+
+		// Make Edges
+		for(let n1 of this.nodes) {
+			for(let n2 of this.nodes) {
+				if(n1 != n2) {
+					n1.addNeighbor(n2);
+				}
+			}
 		}
 
 		this.determineBoundaries();
