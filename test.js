@@ -302,6 +302,38 @@ class PathGraph extends RectGraph
 
 /*
 
+Wheel is a cycle and a star
+
+*/
+class WheelGraph extends Graph
+{
+	constructor(size, players) {
+		super(players);
+
+		// Make Outer Nodes
+		var dist = Math.sqrt(Math.pow(100*Math.cos(2*Math.PI/size) - 100, 2) + Math.pow(100*Math.sin(2*Math.PI/size), 2));
+		for(var i = 0; i < size; i++) {
+			this.addNode(new Node(100*Math.cos(2*Math.PI*i/size), 100*Math.sin(2*Math.PI*i/size), .35*dist))
+		}
+
+		// Make Outer Edges
+		this.geometric(dist+1);
+
+		// Make Center
+		this.addNode(new Node(0, 0, .35*dist));
+
+		// Make Spokes
+		for(var i = 0; i < size; i++) {
+			this.nodes[size].addNeighbor(this.nodes[i]);
+			this.nodes[i].addNeighbor(this.nodes[size]);
+		}
+
+		this.determineBoundaries();
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -368,7 +400,7 @@ Set the Graph
 
 */
 
-var testGraph = new PathGraph(10, players);
+var testGraph = new WheelGraph(10, players);
 
 
 
