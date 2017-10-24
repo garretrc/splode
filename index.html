@@ -1,4 +1,4 @@
-<!-- Prototype browser game, first thing I've really done with HTML / Javascript.
+<!-- Prototype browser game.
      Based on this tutorial for a totally different game:
 	 https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript -->
 <!DOCTYPE html>
@@ -19,13 +19,14 @@
 
 <script>
 
-
+	// Initial canvas
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    var gameInProgress = false;
 	
+	// Add the mouseListener
     document.addEventListener("click", clickHandler, false);
 	
+	// Function for getting the position of a click
 	function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
         return {
@@ -34,7 +35,7 @@
         };
     }
 
-
+    // Main Iteration. Calls loop in the javascript incessantly.
     function draw(time) {
 		var w = window.innerWidth, h = window.innerHeight;
 		canvas.width = w;
