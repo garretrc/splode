@@ -33,7 +33,7 @@ class Node
         this.y=y;
         this.r=r;
     }
-    
+
     addNeighbor(node)
     {
         this.neighbors.push(node);
@@ -708,3 +708,88 @@ function loop(time, width, height) {
 	// Draw graphs
 	drawGraph(testGraph, width, height*bottomMargin);
 }
+
+// Add menu functionality
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function resetToSameGraph(testGraph, numPlayers) {
+
+}
+
+function changeNumPlayers(num) {
+  let players2 = [];
+  for (let i = 0; i < num; i++) {
+    let player = new Player(`Player ${i + 1}`, getRandomColor());
+    players2.push(player);
+  }
+  players = players2;
+  testGraph = new RectGraph(5,5,players2);
+}
+
+const numPlayersSelect = document.querySelector('.num-players-dropdown');
+numPlayersSelect.addEventListener('click', () => {
+  let numPlayers = prompt("Please enter total number of players", );
+  if (numPlayers != null) changeNumPlayers(numPlayers);
+  else changeNumPlayers(2);
+});
+
+const graphSelector = document.querySelector('.graph-selector');
+const graphChangeButton = document.querySelector('.change-graph-button');
+graphChangeButton.addEventListener('click', () => {
+  graphSelector.classList.toggle('graph-selector-open');
+});
+
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond"]
+
+for (let graph of graphs) {
+  graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
+}
+
+function chooseGraph(e) {
+  let size = 0;
+  switch(this.textContent) {
+    case "Rectangle":
+      let width = parseInt(prompt("Choose width",));
+      let height = parseInt(prompt("Choose height",));
+      testGraph = new RectGraph(width, height, players);
+      break;
+    case "Square":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new SquareGraph(size, players);
+      break;
+    case "Cycle":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new CycleGraph(size, players);
+      break;
+    case "Path":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new PathGraph(size, players);
+      break;
+    case "Wheel":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new WheelGraph(size, players);
+      break;
+    case "Complete":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new CompleteGraph(size, players);
+      break;
+    case "Diamond":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new DiamondGraph(size, players);
+      break;
+  }
+  graphSelector.classList.remove('graph-selector-open');
+}
+
+var graphButtons = graphSelector.querySelectorAll('.graph-name');
+
+graphButtons.forEach(graphButton => {
+  graphButton.addEventListener('click', chooseGraph);
+});

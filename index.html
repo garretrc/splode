@@ -12,45 +12,51 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
+  <div class="navbar">
+    <div class="title">Nodesplosion</div>
+    <div class="num-players-dropdown">Number of Players</div>
+    <div class="change-graph-button">Change Graph</div>
+  </div><br>
 
-<canvas id="myCanvas" ></canvas>
+  <canvas id="myCanvas" ></canvas>
 
-<script src="test.js"></script>
+  <div class="graph-selector"></div>
+  <script src="test.js"></script>
 
-<script>
+  <script>
 
-	// Initial canvas
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-	
-	// Add the mouseListener
-    document.addEventListener("click", clickHandler, false);
-	
-	// Function for getting the position of a click
-	function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: Math.round(evt.clientX - rect.left),
-          y: Math.round(evt.clientY - rect.top)
-        };
-    }
+  	// Initial canvas
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
 
-    // Main Iteration. Calls loop in the javascript incessantly.
-    function draw(time) {
-		var w = window.innerWidth, h = window.innerHeight;
-		canvas.width = w;
-		canvas.height = h;
-		textSize = Math.floor(Math.max(w, h) * 0.05)
-		canvas.style.width = w + "px";
-		canvas.style.height = h + "px";
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        loop(time, w, h);
-	    requestAnimationFrame(draw);
-    }
+  	// Add the mouseListener
+      canvas.addEventListener("click", clickHandler, false);
 
-    draw();
+  	// Function for getting the position of a click
+  	function getMousePos(canvas, evt) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: Math.round(evt.clientX - rect.left),
+            y: Math.round(evt.clientY - rect.top)
+          };
+      }
 
-</script>
+      // Main Iteration. Calls loop in the javascript incessantly.
+      function draw(time) {
+  		var w = window.innerWidth, h = window.innerHeight;
+  		canvas.width = w;
+  		canvas.height = h;
+  		textSize = Math.floor(Math.max(w, h) * 0.05)
+  		canvas.style.width = w + "px";
+  		canvas.style.height = h + "px";
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          loop(time, w, h);
+  	    requestAnimationFrame(draw);
+      }
+
+      draw();
+
+  </script>
 
 </body>
 </html>
