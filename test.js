@@ -140,6 +140,19 @@ class Graph
 		this.height = this.maxY - this.minY;
 	}
 
+	// Creates the edges of the graph via a geometric graph model, that is,
+	// all nodes within a certain distance of one another will be adjacent.
+	geometric(dist)
+	{
+		for(let n1 of this.nodes) {
+			for(let n2 of this.nodes) {
+				if((Math.sqrt((n1.x-n2.x)*(n1.x-n2.x) + (n1.y-n2.y)*(n1.y-n2.y)) <= dist) && n1 != n2) {
+					n1.addNeighbor(n2);
+				}
+			}
+		}
+	}
+
 	// Sees if the splode queue is empty or not
     stillProcessing() {
     	if(this.toProcess.length == 0) {
@@ -252,6 +265,30 @@ class SquareGraph extends RectGraph
 
 /*
 
+Cycle is a graph cycle with n nodes.
+
+*/
+class CycleGraph extends Graph
+{
+	constructor(size, players)
+	{
+		super(players);
+
+		// Make Nodes
+		var dist = Math.sqrt(Math.pow(100*Math.cos(2*Math.PI/size) - 100, 2) + Math.pow(100*Math.sin(2*Math.PI/size), 2));
+		for(var i = 0; i < size; i++) {
+			this.addNode(new Node(100*Math.cos(2*Math.PI*i/size), 100*Math.sin(2*Math.PI*i/size), .35*dist))
+		}
+
+		// Make Edges
+		this.geometric(dist+1);
+
+		this.determineBoundaries();
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -318,7 +355,7 @@ Set the Graph
 
 */
 
-var testGraph = new SquareGraph(3, players);
+var testGraph = new CycleGraph(10, players);
 
 
 
