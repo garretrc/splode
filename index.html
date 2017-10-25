@@ -16,11 +16,12 @@
     <div class="title">Nodesplosion</div>
     <div class="num-players-dropdown">Number of Players</div>
     <div class="change-graph-button">Change Graph</div>
-  </div><br>
+  </div>
 
   <canvas id="myCanvas" ></canvas>
 
   <div class="graph-selector"></div>
+
   <script src="test.js"></script>
 
   <script>
@@ -28,7 +29,7 @@
   	// Initial canvas
       var canvas = document.getElementById("myCanvas");
       var ctx = canvas.getContext("2d");
-
+      let navbar = document.querySelector('.navbar');
   	// Add the mouseListener
       canvas.addEventListener("click", clickHandler, false);
 
@@ -43,7 +44,7 @@
 
       // Main Iteration. Calls loop in the javascript incessantly.
       function draw(time) {
-  		var w = window.innerWidth, h = window.innerHeight;
+  		var w = window.innerWidth*.9, h = window.innerHeight - navbar.offsetHeight;
   		canvas.width = w;
   		canvas.height = h;
   		textSize = Math.floor(Math.max(w, h) * 0.05)
