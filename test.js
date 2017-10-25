@@ -33,7 +33,7 @@ class Node
         this.y=y;
         this.r=r;
     }
-    
+
     addNeighbor(node)
     {
         this.neighbors.push(node);
@@ -87,7 +87,7 @@ class Graph
 		// Use a map for assigning players to the number of nodes they occupy
 		this.players = players;
 		this.currIndex = 0;
-		this.currPlayer = this.players[this.currIndex];
+		this.currPlayer = this.players[this.currIndex]; console.log(this.currPlayer);
 		this.playerCounts = new Map();
 		for(var i = 0; i < players.length; i++) {
 			this.playerCounts.set(this.players[i], 0);
@@ -107,6 +107,12 @@ class Graph
 
 		// The following is for the undo feature. We store the previous graph.
 		this.prev = null;
+
+    // Added by Nick Roach, this keeps track of height and width of graph if
+    // rectangle, null otherwise. See RectGraph for use.
+    this.nodeWidth = null;
+    this.nodeHeight = null;
+    this.size = null;
     }
 
     addNode(node)
@@ -217,6 +223,9 @@ class Graph
     	if(this.toProcess.length == 0) {
     		var newGraph = new Graph(players);
 
+        // Added by Nick Roach, preserves RectGraph dupliication data
+        newGraph.nodeWidth = this.nodeWidth;
+        newGraph.nodeHeight = this.nodeHeight;
     		// Make copy of nodes
     		var newNode;
     		for(let node of this.nodes) {
@@ -278,7 +287,9 @@ class RectGraph extends Graph
     {
     	// Call super to configure everything
     	super(players);
-
+      // Added by Nick Roach, assign width and height
+      this.nodeWidth = width;
+      this.nodeHeight = height;
     	// Make Nodes, with their coordinates
         for(var i = 0; i < width; i++) {
             for(var j = 0; j < height; j++) {
@@ -327,7 +338,6 @@ class CycleGraph extends Graph
 	constructor(size, players)
 	{
 		super(players);
-
 		// Make Nodes
 		var dist = Math.sqrt(Math.pow(100*Math.cos(2*Math.PI/size) - 100, 2) + Math.pow(100*Math.sin(2*Math.PI/size), 2));
 		for(var i = 0; i < size; i++) {
@@ -651,7 +661,7 @@ number of dots in that node and at it to the graph's toProcess list.
 
 */
 function clickHandler(evt) {
-	console.log("Click!");
+	//console.log("Click!");
 	// Get coordinates in graph-space
 	var coord = getMousePos(canvas, evt);
 	if(coord.y >= canvas.height*bottomMargin && testGraph.prev != null) {
@@ -708,3 +718,100 @@ function loop(time, width, height) {
 	// Draw graphs
 	drawGraph(testGraph, width, height*bottomMargin);
 }
+
+/* Random color generator for each new player created */
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
+/* Changes the number of players and resets the game */
+function changeNumPlayers(num) {
+  let newPlayers = [];
+  for (let i = 0; i < num; i++) {
+    let player = new Player(`Player ${i + 1}`, getRandomColor());
+    newPlayers.push(player);
+  }
+  players = newPlayers;
+  // If it's a rectangle
+  if (testGraph.nodeWidth != null) {
+    testGraph = new RectGraph(testGraph.nodeWidth, testGraph.nodeHeight, players);
+  }
+  else {
+    let len = testGraph.nodes.length;
+    testGraph = new testGraph.constructor(len, players);
+    console.log(testGraph.currPlayer);
+  }
+}
+
+
+/* Prompt for changing number of players */
+const numPlayersSelect = document.querySelector('.num-players-dropdown');
+numPlayersSelect.addEventListener('click', () => {
+  let numPlayers = prompt("Please enter total number of players", );
+  if (numPlayers != null) changeNumPlayers(numPlayers);
+  else changeNumPlayers(2);
+});
+
+
+/* Change graph type functions. In order to add a new graph to the selection,
+add the name of your choice to the 'graphs' array and add a similar case to the
+other cases in the switch statement of the chooseGraph() function */
+const graphSelector = document.querySelector('.graph-selector');
+const graphChangeButton = document.querySelector('.change-graph-button');
+graphChangeButton.addEventListener('click', () => {
+  graphSelector.classList.toggle('graph-selector-open');
+});
+
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond"]
+
+for (let graph of graphs) {
+  graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
+}
+
+function chooseGraph(e) {
+  let size = 0;
+  switch(this.textContent) {
+    case "Rectangle":
+      let width = parseInt(prompt("Choose width",));
+      let height = parseInt(prompt("Choose height",));
+      testGraph = new RectGraph(width, height, players);
+      break;
+    case "Square":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new SquareGraph(size, players);
+      break;
+    case "Cycle":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new CycleGraph(size, players);
+      break;
+    case "Path":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new PathGraph(size, players);
+      break;
+    case "Wheel":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new WheelGraph(size, players);
+      break;
+    case "Complete":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new CompleteGraph(size, players);
+      break;
+    case "Diamond":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new DiamondGraph(size, players);
+      break;
+  }
+  graphSelector.classList.remove('graph-selector-open');
+}
+
+var graphButtons = graphSelector.querySelectorAll('.graph-name');
+
+graphButtons.forEach(graphButton => {
+  graphButton.addEventListener('click', chooseGraph);
+});
