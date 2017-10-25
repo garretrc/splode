@@ -217,6 +217,16 @@ class Graph
     	return false;
     }
 
+    // Determines if all the nodes have been taken
+    isFull()
+    {
+    	var occupied = 0;
+    	for(let p of this.players) {
+    		occupied = occupied + this.playerCounts.get(p);
+    	}
+    	return occupied == this.nodes.length;
+    }
+
     // Duplicates the graph to save it for the undo feature.
     duplicate()
     {
@@ -267,6 +277,16 @@ class Graph
 			// Now we set the current graph to this new graph.
 			return newGraph;
     	}
+    }
+
+    // Give the next turn to the next player
+    nextTurn()
+    {
+		do {
+			this.currIndex = (this.currIndex+1)%this.players.length;
+			this.currPlayer = this.players[this.currIndex];
+			console.log(this.currIndex);
+		} while(this.playerCounts.get(this.currPlayer) == 0 && this.isFull());
     }
 }
 
@@ -703,15 +723,14 @@ function loop(time, width, height) {
 	// Print Who's playing
 	ctx.font = 30 + "px Arial";
 	ctx.fillStyle = testGraph.currPlayer.color;
-	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn") : "Game over"), 10, textSize + bottomMargin*height);
+	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn") : "Game over"), 10, textSize + (bottomMargin-.04)*height);
 
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
 		var didSplode = testGraph.splode();
 		splodeTime = time + (didSplode ? splodeConstant : 0);
 		if(!testGraph.stillProcessing()) {
-			testGraph.currIndex = (testGraph.currIndex+1)%testGraph.players.length;
-			testGraph.currPlayer = testGraph.players[testGraph.currIndex];
+			testGraph.nextTurn();
 		}
 	}
 
