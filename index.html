@@ -6,17 +6,65 @@
 <head>
     <meta charset="utf-8" />
     <title>Nodesplosion</title>
-	<link rel = "stylesheet"
-		type = "text/css"
-		href = "testcss.css" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<link rel = "stylesheet"
+type = "text/css"
+href = "testcss.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
-  <div class="navbar">
-    <div class="title">Nodesplosion</div>
-    <div class="num-players-dropdown">Number of Players</div>
-    <div class="change-graph-button">Change Graph</div>
-  </div>
+<!--  <nav class="navbar">
+    <div class="">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand">NodeSplosion</a>
+      </div>
+      <div class="collapse navbar-collapse" id="topNavBar">
+        <ul class="nav navbar-nav">
+
+          <li class="active">
+              <div>
+                <span class="num-players-dropdown glyphicon glyphicon-cd" aria-hidden="false"></span>&nbsp; Players
+              </div>
+          </li>
+          <li class="">
+              <div>
+                <span class="change-graph-button glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Change Graph
+              </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>-->
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">NodeSplosion</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="num-players-dropdown"><a href="#">Players</a></li>
+                <li class="change-graph-button"><a href="#">Graphs</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
   <canvas id="myCanvas" ></canvas>
 
@@ -44,7 +92,7 @@
 
       // Main Iteration. Calls loop in the javascript incessantly.
       function draw(time) {
-  		var w = window.innerWidth*.9, h = window.innerHeight - navbar.offsetHeight;
+  		var w = window.innerWidth*.9, h = window.innerHeight - navbar.offsetHeight - 20;
   		canvas.width = w;
   		canvas.height = h;
   		textSize = Math.floor(Math.max(w, h) * 0.05)
