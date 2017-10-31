@@ -14,8 +14,9 @@ body, html { height:100%; overflow-y: hidden;}
 }
 
 .graph-selector {
-  width: 500px;
-  height: 400px;
+  text-align: center;
+  width: 30%;
+  height: 60%;
   background-color: white;
   position: absolute;
   top:0;
@@ -27,7 +28,6 @@ body, html { height:100%; overflow-y: hidden;}
   transform: translateX(-400%);
   transition: 1s;
   margin: auto;
-  display: flex;
 }
 
 .graph-selector-open {
@@ -35,6 +35,8 @@ body, html { height:100%; overflow-y: hidden;}
 }
 
 .graph-name {
-  flex-grow: 1;
-  margin: 5px;
+  font-size: 130%;
+  width: 100%;
+  display: block;
+  cursor: pointer;
 }
