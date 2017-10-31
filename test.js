@@ -783,6 +783,7 @@ add the name of your choice to the 'graphs' array and add a similar case to the
 other cases in the switch statement of the chooseGraph() function */
 const graphSelector = document.querySelector('.graph-selector');
 const graphChangeButton = document.querySelector('.change-graph-button');
+const graphNames = document.querySelectorAll('.graph-name');
 graphChangeButton.addEventListener('click', () => {
   graphSelector.classList.toggle('graph-selector-open');
 });
@@ -792,6 +793,8 @@ let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diam
 for (let graph of graphs) {
   graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
 }
+
+
 
 function chooseGraph(e) {
   let size = 0;
@@ -833,4 +836,5 @@ var graphButtons = graphSelector.querySelectorAll('.graph-name');
 
 graphButtons.forEach(graphButton => {
   graphButton.addEventListener('click', chooseGraph);
+  graphButton.style.height = `${100/graphs.length}%`
 });
