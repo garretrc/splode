@@ -548,6 +548,14 @@ Set the Graph
 
 var testGraph = new RectGraph(5, 5, players);
 
+/*
+
+Set Colors
+
+*/
+var possibleColors = ["#8E44AD", "#2ECC71", "#3498DB", "#D35400", "#E74C3C", "#F1C40F", "#17202A", "#73C6B6"]
+var colorCount = 0;
+
 
 
 
@@ -738,8 +746,12 @@ function loop(time, width, height) {
 	drawGraph(testGraph, width, height*bottomMargin);
 }
 
-/* Random color generator for each new player created */
+/* Random color generator for each new player created; not random anymore */
 function getRandomColor() {
+  if(colorCount < possibleColors.length) {
+  	colorCount = colorCount + 1;
+  	return possibleColors[colorCount-1];
+  }
   var letters = '0123456789ABCDEF';
   var color = '#';
   for (var i = 0; i < 6; i++) {
