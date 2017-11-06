@@ -477,6 +477,42 @@ class DiamondGraph extends Graph
 
 /*
 
+Bob's Graph: Bob's custom graph
+
+*/
+class BobGraph extends Graph
+{
+	constructor(players)
+	{
+		super(players);
+		// Make Nodes, with their coordinates
+        for(var i = 0; i < 9; i++) {
+            for(var j = 0; j < 9; j++) {
+                this.addNode(new Node(i*100, j*100, 35));
+            }
+        }
+
+        // Make edges
+        for( i = 0; i < this.nodes.length; i++){
+            var current = this.nodes[i];
+            if(!(i < 9) && !(i < 4*9 && i > 3*9-1 && i != 31 && i != 28 && i != 34) && !(i < 7*9 && i > 6*9-1 && i != 55 && i != 58 && i != 61))
+                current.addNeighbor(this.nodes[i - 9]);
+            if(!(i%9 == 9-1) && !(i%9 == 6-1 && i!=14 && i!=41 && i!=68) && !(i%9 == 3-1 && i!=11 && i!=38 && i!=65))
+                current.addNeighbor(this.nodes[i + 1]);
+            if(!(i >= (9-1)*9) && !(i >= (6-1)*9 && i < (7-1)*9 && i != 49 && i != 52 && i != 46) && !(i >= (3-1)*9 && i < (4-1)*9 && i != 22 && i != 19 && i != 25))
+                current.addNeighbor(this.nodes[i + 9]);
+            if(!(i%9 == 0) && !(i%9 == 3 && i!=12 && i!=39 && i!=66) && !(i%9 == 6 && i!=15 && i!=42 && i!=69))
+                current.addNeighbor(this.nodes[i - 1]);
+        }
+
+        // Very Important!!! Compute Boundaries
+        this.determineBoundaries();
+
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -800,7 +836,7 @@ graphChangeButton.addEventListener('click', () => {
   graphSelector.classList.toggle('graph-selector-open');
 });
 
-let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond"]
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Bob's Graph"]
 
 for (let graph of graphs) {
   graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
@@ -840,6 +876,8 @@ function chooseGraph(e) {
       size = parseInt(prompt("Choose size",));
       testGraph = new DiamondGraph(size, players);
       break;
+    case "Bob's Graph":
+      testGraph = new BobGraph(players);
   }
   graphSelector.classList.remove('graph-selector-open');
 }
