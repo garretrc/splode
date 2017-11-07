@@ -772,7 +772,7 @@ function loop(time, width, height) {
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
 		var didSplode = testGraph.splode();
-		splodeTime = time + (didSplode ? splodeConstant : 0);
+		splodeTime = time + (didSplode ? splodeConstant/Math.pow(testGraph.overflow, .5) + 50 : 0);
 		if(!testGraph.stillProcessing()) {
 			testGraph.nextTurn();
 		}
