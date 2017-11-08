@@ -513,6 +513,43 @@ class BobGraph extends Graph
 
 /*
 
+Triangle Graph: regular triangle tiling
+
+*/
+class TriangleGraph extends Graph
+{
+	constructor(size, players)
+	{
+		super(players)
+
+		for(var i = 0; i < size+1; i++) {
+			for(var j = -i/2; j < i/2; j++) {
+			    this.addNode(new Node(j*100, i*86, 35));
+			}
+        }
+
+/*		for(var i = 0; i < 2*size-1; i++) {
+            if(i < size)
+            {
+				for(var j = -size - Math.floor(i/2); j < size + Math.floor(i/2); j++) {
+				    this.addNode(new Node(j*100 + (i%2)*50, i*86, 35));
+				}
+        	}
+        	else {
+				for(var j = size - Math.floor(i/2); j < 2*size - Math.floor(i/2); j++) {
+				    this.addNode(new Node(j*100 + (i%2)*50, i*86, 35));
+				}
+        	}
+        }*/
+
+        this.geometric(100+10);
+
+		this.determineBoundaries();
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -836,7 +873,7 @@ graphChangeButton.addEventListener('click', () => {
   graphSelector.classList.toggle('graph-selector-open');
 });
 
-let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Bob's Graph"]
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Triangle", "Bob's Graph"]
 
 for (let graph of graphs) {
   graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
@@ -876,8 +913,13 @@ function chooseGraph(e) {
       size = parseInt(prompt("Choose size",));
       testGraph = new DiamondGraph(size, players);
       break;
+    case "Triangle":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new TriangleGraph(size, players);
+      break;
     case "Bob's Graph":
       testGraph = new BobGraph(players);
+      break;
   }
   graphSelector.classList.remove('graph-selector-open');
 }
