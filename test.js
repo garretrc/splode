@@ -550,6 +550,58 @@ class TriangleGraph extends Graph
 
 /*
 
+Hexagonal Graph: regular hexagonal tiling
+
+*/
+class HexGraph extends Graph
+{
+	constructor(size, players)
+	{
+		super(players)
+
+		for(var i = 1; i < size+2+1; i++) {
+			for(var j = -i/2; j < i/2; j++) {
+				if(!(i==1) && !(i==size+2 && (j==-i/2 || j==i/2-1))) {
+					this.addNode(new Node(j*200, i*172 - 55, 40));
+				}
+			    if(!(i==size+2)) {
+			    	this.addNode(new Node(j*200, i*172 + 55, 40));
+			    }
+			}
+        }
+
+        this.geometric(125);
+
+        this.determineBoundaries();
+	}
+}
+
+/*
+
+Rocket Ship!!!
+
+*/
+class RocketGraph extends Graph
+{
+	constructor(size, players)
+	{
+		super(players)
+
+		for(var i = 0; i < size+1; i++) {
+			for(var j = -i/2; j < i/2; j++) {
+			    this.addNode(new Node(j*100, i*172 - 50, 35));
+			    this.addNode(new Node(j*100, i*172 + 50, 35));
+			}
+        }
+
+        this.geometric(100+10);
+
+        this.determineBoundaries();
+	}
+}
+
+/*
+
 The Player class is used to keep track of players. For now, it only contains
 a username and color, but in the future it may keep track of statistics.
 
@@ -619,7 +671,7 @@ Set the Graph
 
 */
 
-var testGraph = new RectGraph(5, 5, players);
+var testGraph = new HexGraph(5, players);
 
 /*
 
@@ -873,7 +925,7 @@ graphChangeButton.addEventListener('click', () => {
   graphSelector.classList.toggle('graph-selector-open');
 });
 
-let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Triangle", "Bob's Graph"]
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Triangle", "Hexagon", "Bob's Graph"]
 
 for (let graph of graphs) {
   graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
@@ -916,6 +968,10 @@ function chooseGraph(e) {
     case "Triangle":
       size = parseInt(prompt("Choose size",));
       testGraph = new TriangleGraph(size, players);
+      break;
+    case "Hexagon":
+      size = parseInt(prompt("Choose size",));
+      testGraph = new HexGraph(size, players);
       break;
     case "Bob's Graph":
       testGraph = new BobGraph(players);
