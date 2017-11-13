@@ -123,7 +123,7 @@ class Graph
 	constructor(players)
 	{
 		this.nodes = [];
-		this.time = 0;
+		this.turnCount = 0;
 
 		// The following keeps track of the players
 		this.players = players;
@@ -155,12 +155,6 @@ class Graph
 	{
 		while(!(node.neighbors.size == 0)) {
 			node.rmNeighbor(node.neighbors[0]);
-		}
-		for(let neigh of this.nodes) {
-			if(node == neigh) {
-				this.nodes.splice(this.nodes.indexOf(node),1);
-				break;
-			}
 		}
 	}
 
@@ -288,7 +282,7 @@ class Graph
     {
     	if(this.toProcess.length == 0) {
 			var newGraph = new Graph(players);j
-			newGraph.time = this.time+1;
+			newGraph.turnCount = this.turnCount+1;
 
     		// Make copy of nodes
     		var newNode;
@@ -342,6 +336,16 @@ class Graph
 			n.player.occupancy++;
 		}
 	}
+
+	playerString()
+	{
+		var str = ""
+		for(let p of this.players) {
+			str = str + p.name + ": " + p.getScore() + "   ";
+		}
+		return str;
+	}
+
 }
 
 /*

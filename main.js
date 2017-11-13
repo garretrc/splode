@@ -235,7 +235,7 @@ function loop(time, width, height) {
 	// Print Who's playing
 	ctx.font = 30 + "px Arial";
 	ctx.fillStyle = testGraph.currPlayer.color;
-	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn " + testGraph.currPlayer.getScore()) : "Game over"), 10, textSize + (bottomMargin-.04)*height);
+	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn -- " + testGraph.playerString()) : "Game over! " + testGraph.playerString()), 10, textSize + (bottomMargin-.04)*height);
 
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
@@ -244,7 +244,7 @@ function loop(time, width, height) {
 		if(!testGraph.stillProcessing()) {
 			testGraph.nextTurn();
 		}
-		console.log(testGraph.time);
+		console.log(testGraph.turnCount);
 	}
 
 	// Draw graphs
