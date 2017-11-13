@@ -54,7 +54,7 @@ var testGraph = new HexGraph(4, players);
 Set Colors
 
 */
-var possibleColors = ["#8E44AD", "#2ECC71", "#3498DB", "#D35400", "#F74C3C", "#F1C40F", "#17202A", "#73C6B6"]
+var possibleColors = ["#8E44AD", "#2ECC71", "#3498DB", "#D35400", "#F76C3C", "#F1C40F", "#17202A", "#73C6B6"]
 var colorCount = 0;
 
 
@@ -235,7 +235,7 @@ function loop(time, width, height) {
 	// Print Who's playing
 	ctx.font = 30 + "px Arial";
 	ctx.fillStyle = testGraph.currPlayer.color;
-	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn -- " + testGraph.playerString()) : "Game over! " + testGraph.playerString()), 10, textSize + (bottomMargin-.04)*height);
+	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn -- " + testGraph.playerString()) : "Game over! " + testGraph.playerString()), 10, textSize + (bottomMargin-.04)*height, width - 20);
 
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
