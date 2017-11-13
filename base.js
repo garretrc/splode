@@ -11,6 +11,8 @@ should be used to access their contents (javascript doesn't have scoping).
 This file should be loaded first. Only edit if you know what you are doing.
 Several utilities are built in to the GRAPH class for making new boards.
 
+If you have any questions about the implementation, ask Bob Krueger.
+
 ***/
 
 /*
