@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 /***
 
 LOCAL CODE
@@ -25,7 +16,7 @@ Global Variables
 */
 
 // Blank node's player
-var empty = new Player("empty", "#444444");
+var empty = new Player("empty", "#444444", "0000");
 
 // Need to initialize this
 var splodeTime = 0;
@@ -33,7 +24,7 @@ var splodeTime = 0;
 // color of the edges
 var edgeColor = "#000000";
 
-// milliseconds between splodes; will make variable soon.
+// milliseconds between splodes.
 var splodeConstant = 500;
 
 // Proportion for bottom margin
@@ -45,8 +36,8 @@ var bottomMargin = .9;
 Set Players
 
 */
-var p1 = new Player("Bob", "#D35400");
-var p2 = new Player("Rob", "#27AE60");
+var p1 = new Player("Bob", "#D35400", "ouxr");
+var p2 = new Player("Rob", "#27AE60", "pifr");
 var players = [p1, p2];
 
 
@@ -56,14 +47,14 @@ Set the Graph
 
 */
 
-var testGraph = new HexGraph(5, players);
+var testGraph = new HexGraph(4, players);
 
 /*
 
 Set Colors
 
 */
-var possibleColors = ["#8E44AD", "#2ECC71", "#3498DB", "#D35400", "#E74C3C", "#F1C40F", "#17202A", "#73C6B6"]
+var possibleColors = ["#8E44AD", "#2ECC71", "#3498DB", "#D35400", "#F74C3C", "#F1C40F", "#17202A", "#73C6B6"]
 var colorCount = 0;
 
 
@@ -204,25 +195,28 @@ function clickHandler(evt) {
 	var coord = getMousePos(canvas, evt);
 	if(coord.y >= canvas.height*bottomMargin && testGraph.prev != null) {
 		testGraph = testGraph.prev;
+		testGraph.undo();
 	}
 	var mousePos = scaleBack(canvas.width, canvas.height*bottomMargin, testGraph, coord.x, coord.y);
 	for (let node of testGraph.nodes) {
 		// For each node, see if the click was in it, and if the colors agree,
 		// and if the time is okay to click.
-		if(!testGraph.stillProcessing() && node.contains(mousePos.x, mousePos.y) && (node.player == testGraph.currPlayer || node.player == empty)) {
+		if(!testGraph.stillProcessing() && node.contains(mousePos.x, mousePos.y) && (node.player.ID == testGraph.currPlayer.ID || node.player == empty)) {
 			testGraph = testGraph.duplicate();
 			node = testGraph.nodes[testGraph.prev.nodes.indexOf(node)];
 			console.log(node.count + " " + node.neighbors.length + " " + node.neighbors.length);
 			node.count = node.count + 1;
-			if(node.player != testGraph.currPlayer) {
+			if(node.player.ID != testGraph.currPlayer.ID) {
 				if(node.player != empty) {
-					testGraph.playerCounts.set(node.player, testGraph.playerCounts.get(node.player)-1);
+					node.player.occupancy--;
 				}
-				testGraph.playerCounts.set(testGraph.currPlayer, testGraph.playerCounts.get(testGraph.currPlayer)+1);
+				testGraph.currPlayer.occupancy++;
 				node.player = testGraph.currPlayer;
 			}
 			testGraph.toProcess = [];
 			testGraph.toProcess.push(node);
+
+			console.log(testGraph.toProcess);
 		}
 	}
 }
@@ -241,7 +235,7 @@ function loop(time, width, height) {
 	// Print Who's playing
 	ctx.font = 30 + "px Arial";
 	ctx.fillStyle = testGraph.currPlayer.color;
-	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn") : "Game over"), 10, textSize + (bottomMargin-.04)*height);
+	ctx.fillText((!testGraph.hasWinner() ? (testGraph.currPlayer.name + "'s turn " + testGraph.currPlayer.getScore()) : "Game over"), 10, textSize + (bottomMargin-.04)*height);
 
 	// Splode timing
 	if(testGraph.stillProcessing() && splodeTime < time && testGraph.overflow < 30000) {
@@ -250,6 +244,7 @@ function loop(time, width, height) {
 		if(!testGraph.stillProcessing()) {
 			testGraph.nextTurn();
 		}
+		console.log(testGraph.time);
 	}
 
 	// Draw graphs
@@ -273,21 +268,23 @@ function getRandomColor() {
 
 /* Changes the number of players and resets the game */
 function changeNumPlayers(num) {
-  let newPlayers = [];
-  for (let i = 0; i < num; i++) {
-    let player = new Player(`Player ${i + 1}`, getRandomColor());
-    newPlayers.push(player);
-  }
-  players = newPlayers;
-  // If it's a rectangle
-  if (testGraph.nodeWidth != null) {
-    testGraph = new RectGraph(testGraph.nodeWidth, testGraph.nodeHeight, players);
-  }
-  else {
-    let len = testGraph.nodes.length;
-    testGraph = new testGraph.constructor(len, players);
-    console.log(testGraph.currPlayer);
-  }
+	let newPlayers = [];
+		colorCount = 0;
+	for (let i = 0; i < num; i++) {
+		var color = getRandomColor();
+		let player = new Player(`Player ${i + 1}`, color, color);
+		newPlayers.push(player);
+	}
+	players = newPlayers;
+
+	testGraph.players = players;
+	testGraph.currPlayer = testGraph.players[0];
+
+	// Clear the graph
+	for(let n of testGraph.nodes) {
+		n.count = 0;
+		n.player = empty;
+	}
 }
 
 
@@ -320,11 +317,16 @@ for (let graph of graphs) {
 
 function chooseGraph(e) {
   let size = 0;
+  // Reset player stats
+  for(let p of players) {
+  	p.scores = [0];
+  	p.occupancy = 0;
+  }
   switch(this.textContent) {
     case "Rectangle":
       let width = parseInt(prompt("Choose width",));
       let height = parseInt(prompt("Choose height",));
-      testGraph = new RectGraph(width, height, players);
+      testGraph = new RectGraph([width, height], players);
       break;
     case "Square":
       size = parseInt(prompt("Choose size",));
