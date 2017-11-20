@@ -548,6 +548,30 @@ class TriangleGraph extends Graph
 	}
 }
 
+
+class RobbieGraph extends Graph
+{
+    constructor(players)
+    {
+    	// Call super to configure everything
+    	super(players);
+      // Added by Nick Roach, assign width and height
+    	// Make Nodes, with their coordinates
+        for(var i = 0; i < 7; i++) {
+            for(var j = 0; j < 7; j++) {
+            	if(!((i==2 || i==4) && (j==2 || j==4)))
+            		this.addNode(new Node(i*100, j*100, 35));
+            }
+        }
+
+        // Make edges
+        this.geometric(100);
+
+        // Very Important!!! Compute Boundaries
+        this.determineBoundaries();
+    }
+}
+
 /*
 
 The Player class is used to keep track of players. For now, it only contains
@@ -873,7 +897,7 @@ graphChangeButton.addEventListener('click', () => {
   graphSelector.classList.toggle('graph-selector-open');
 });
 
-let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Triangle", "Bob's Graph"]
+let graphs = ["Rectangle", "Square", "Cycle", "Path", "Wheel", "Complete", "Diamond", "Triangle", "Bob's Graph", "Robbie's Graph"]
 
 for (let graph of graphs) {
   graphSelector.innerHTML += `<div class='graph-name'>${graph}</div>`
@@ -919,6 +943,9 @@ function chooseGraph(e) {
       break;
     case "Bob's Graph":
       testGraph = new BobGraph(players);
+      break;
+    case "Robbie's Graph":
+      testGraph = new RobbieGraph(players);
       break;
   }
   graphSelector.classList.remove('graph-selector-open');
